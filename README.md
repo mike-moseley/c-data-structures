@@ -38,6 +38,10 @@ Tests live in `test/`. Each test file requires a corresponding block in `CMakeLi
 3. Add `test_foo` to the `add_custom_target(tests DEPENDS ...)` line.
 4. Re-run `./update_cmake.sh` to reconfigure.
 
+## TODO
+
+- Refactor `findNode` and `removeNode` to use a shared internal helper that returns both the matching node and its previous node, eliminating duplicated traversal logic
+
 ## Project Structure
 
 ```
