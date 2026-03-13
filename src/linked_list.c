@@ -58,15 +58,20 @@ int removeNode(linked_list_t *list, void *target, int (*cmp)(void *, void*)) {
 	node_t *previous_node;
 	int found;
 
+	/* return and found is boolean, cmp is comparison: 0 when true... */
+	found = 0;
 	if (list == NULL) {
-		return 0;
+		return found;
+	}
+	if (target == NULL) {
+		return found;
 	}
 
-	found = 0;
+	/* cmp function should handle NULL case! */
 	if (list->head == NULL) {
 		return found;
 	}
-	if (cmp(list->head->data, target)){
+	if (cmp(list->head->data, target) == 0){
 		found = 1;
 		previous_node = list->head;
 		list->head = list->head->next;
@@ -77,7 +82,7 @@ int removeNode(linked_list_t *list, void *target, int (*cmp)(void *, void*)) {
 	tracking_node = list->head->next;
 	previous_node = list->head;
 	while (tracking_node != NULL) {
-		if (cmp(tracking_node->data, target)) {
+		if (cmp(tracking_node->data, target)==0) {
 			found = 1;
 			previous_node->next = tracking_node->next;
 			free(tracking_node);
@@ -92,6 +97,7 @@ int removeNode(linked_list_t *list, void *target, int (*cmp)(void *, void*)) {
 	return found;
 }
 
+/* cmp function should handle NULL case! */
 node_t *findNode(linked_list_t *list, void *target, int(*cmp)(void *, void *)){
 	node_t *tracking_node;
 	if (list == NULL) {
@@ -100,9 +106,12 @@ node_t *findNode(linked_list_t *list, void *target, int(*cmp)(void *, void *)){
 	if (list->head == NULL){
 		return NULL;
 	}
+	if (target == NULL) {
+		return NULL;
+	}
 	tracking_node = list->head;
 	while (tracking_node != NULL) {
-		if (cmp(tracking_node->data, target)){
+		if (cmp(tracking_node->data, target)==0){
 			return tracking_node;
 		}
 		tracking_node = tracking_node->next;
@@ -110,15 +119,11 @@ node_t *findNode(linked_list_t *list, void *target, int(*cmp)(void *, void *)){
 
 	return NULL;
 }
-
 int freeLinkedList(linked_list_t *list, void (*free_data)(void *)) {
 	node_t *tracking_node;
 	node_t *delete_node;
 
 	if (list == NULL) {
-		return 0;
-	}
-	if (free_data == NULL) {
 		return 0;
 	}
 	if (list->head == NULL) {
@@ -130,9 +135,18 @@ int freeLinkedList(linked_list_t *list, void (*free_data)(void *)) {
 	while(tracking_node != NULL) {
 		delete_node = tracking_node;
 		tracking_node = tracking_node->next;
-		free_data(delete_node->data);
+		if (free_data != NULL){
+			free_data(delete_node->data);
+		}
 		free(delete_node);
 	}
 	free(list);
 	return 1;
 }
+
+/* int freeAllNodes(linked_list_t *list) { */
+/* 	node_t *delete_node; */
+/* 	while (list->head != NULL) { */
+/**/
+/* 	} */
+/* } */
