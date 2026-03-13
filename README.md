@@ -40,6 +40,8 @@ Tests live in `test/`. Each test file requires a corresponding block in `CMakeLi
 
 ## TODO
 
+- Add malloc failure testing via a wrapped `malloc` that can be toggled to return `NULL` in tests
+
 - Refactor `findNode` and `removeNode` to use a shared internal helper that returns both the matching node and its previous node, eliminating duplicated traversal logic
 
 ## Project Structure
