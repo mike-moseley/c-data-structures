@@ -97,8 +97,29 @@ void test_removeNode(void){
 	pushNode(list, &int1);
 	pushNode(list, &int2);
 	pushNode(list, &int3);
+	TEST_ASSERT_EQUAL_INT(3, list->size);
 	removeNode(list, &int2, cmp_int);
+	TEST_ASSERT_EQUAL_INT(2, list->size);
 	TEST_ASSERT_EQUAL_INT(7,*(int *)list->head->data);
+	TEST_ASSERT_EQUAL_INT(3,*(int *)list->head->next->data);
+	freeLinkedList(list, NULL);
+}
+void test_removeNodeHead(void){
+	linked_list_t *list;
+	int int1;
+	int int2;
+	int int3;
+	int1 = 3;
+	int2 = 5;
+	int3 = 7;
+	list = createLinkedList();
+	pushNode(list, &int1);
+	pushNode(list, &int2);
+	pushNode(list, &int3);
+	TEST_ASSERT_EQUAL_INT(3, list->size);
+	removeNode(list, &int3, cmp_int);
+	TEST_ASSERT_EQUAL_INT(2, list->size);
+	TEST_ASSERT_EQUAL_INT(5,*(int *)list->head->data);
 	TEST_ASSERT_EQUAL_INT(3,*(int *)list->head->next->data);
 	freeLinkedList(list, NULL);
 }
@@ -115,8 +136,10 @@ void test_removeNodeNull(void) {
 	pushNode(list, &int1);
 	pushNode(list, &int2);
 	pushNode(list, &int3);
+	TEST_ASSERT_EQUAL_INT(3, list->size);
 	error = removeNode(list, NULL, cmp_int);
 	TEST_ASSERT_EQUAL_INT(0, error);
+	TEST_ASSERT_EQUAL_INT(3, list->size);
 	freeLinkedList(list, NULL);
 }
 void test_removeNodeDNE(void) {
@@ -131,8 +154,10 @@ void test_removeNodeDNE(void) {
 	list = createLinkedList();
 	pushNode(list, &int1);
 	pushNode(list, &int2);
+	TEST_ASSERT_EQUAL_INT(2, list->size);
 	error = removeNode(list, &int3, cmp_int);
 	TEST_ASSERT_EQUAL_INT(0, error);
+	TEST_ASSERT_EQUAL_INT(2, list->size);
 	freeLinkedList(list, NULL);
 }
 void test_removeNodeListNull(void) {
@@ -143,6 +168,70 @@ void test_removeNodeListNull(void) {
 	int1 = 0;
 	error = removeNode(list, &int1, cmp_int);
 	TEST_ASSERT_EQUAL_INT(0, error);
+}
+void test_removeNodeListSingle(void) {
+	linked_list_t *list;
+	int int1;
+	int error;
+	list = createLinkedList();
+	int1 = 7;
+	pushNode(list, &int1);
+	TEST_ASSERT_EQUAL_INT(1, list->size);
+	error = removeNode(list, &int1, cmp_int);
+	TEST_ASSERT_EQUAL_INT(1, error);
+	TEST_ASSERT_EQUAL_INT(0, list->size);
+	freeLinkedList(list, NULL);
+}
+
+void test_findNode(void) {
+	linked_list_t *list;
+	node_t *node;
+	int int1;
+	int int2;
+	int int3;
+	int1 = 3;
+	int2 = 5;
+	int3 = 7;
+	list = createLinkedList();
+	pushNode(list, &int1);
+	pushNode(list, &int2);
+	pushNode(list, &int3);
+	node = findNode(list, &int1, cmp_int);
+	TEST_ASSERT_EQUAL_INT(int1, *(int *)node->data);
+	freeLinkedList(list, NULL);
+}
+
+void test_findNodeNull(void) {
+	linked_list_t *list;
+	node_t *node;
+	int int1;
+	int int2;
+	int int3;
+	int1 = 3;
+	int2 = 5;
+	int3 = 7;
+	list = createLinkedList();
+	pushNode(list, &int1);
+	pushNode(list, &int2);
+	pushNode(list, &int3);
+	node = findNode(list, NULL, cmp_int);
+	TEST_ASSERT_NULL(node);
+	freeLinkedList(list, NULL);
+}
+void test_findNodeDNE(void) {
+	linked_list_t *list;
+	node_t *node;
+	int int1;
+	int int2;
+	int int3;
+	int1 = 3;
+	int2 = 5;
+	int3 = 7;
+	list = createLinkedList();
+	pushNode(list, &int1);
+	pushNode(list, &int2);
+	node = findNode(list, &int3, cmp_int);
+	TEST_ASSERT_NULL(node);
 	freeLinkedList(list, NULL);
 }
 
@@ -157,8 +246,13 @@ int main(void)
 	RUN_TEST(test_appendNodeNullData);
 	RUN_TEST(test_appendNodeNullList);
 	RUN_TEST(test_removeNode);
+	RUN_TEST(test_removeNodeHead);
 	RUN_TEST(test_removeNodeNull);
 	RUN_TEST(test_removeNodeDNE);
 	RUN_TEST(test_removeNodeListNull);
+	RUN_TEST(test_removeNodeListSingle);
+	RUN_TEST(test_findNode);
+	RUN_TEST(test_findNodeNull);
+	RUN_TEST(test_findNodeDNE);
 	return UNITY_END();
 }
