@@ -3,7 +3,7 @@
 
 linked_list_t *createLinkedList(void) {
 	linked_list_t *list = malloc(sizeof(linked_list_t));
-	if (list == NULL) return NULL;
+	if(list == NULL) return NULL;
 	list->head = NULL;
 	list->size = 0;
 	return list;
@@ -11,11 +11,11 @@ linked_list_t *createLinkedList(void) {
 
 int pushNode(linked_list_t *list, void *data) {
 	node_t *new_node;
-	if (list == NULL) {
+	if(list == NULL) {
 		return 0;
 	}
 	new_node = malloc(sizeof(node_t));
-	if (new_node == NULL) {
+	if(new_node == NULL) {
 		return 0;
 	}
 	new_node->data = data;
@@ -28,24 +28,24 @@ int pushNode(linked_list_t *list, void *data) {
 int appendNode(linked_list_t *list, void *data) {
 	node_t *new_node;
 	node_t *tracking_node;
-	if (list == NULL) {
+	if(list == NULL) {
 		return 0;
 	}
 	new_node = malloc(sizeof(node_t));
-	if (new_node == NULL) {
+	if(new_node == NULL) {
 		return 0;
 	}
 	new_node->data = data;
 	new_node->next = NULL;
 
-	if (list->head == NULL) {
+	if(list->head == NULL) {
 		list->head = new_node;
 		list->size++;
 		return 1;
 	}
 
 	tracking_node = list->head;
-	while( tracking_node->next != NULL) {
+	while(tracking_node->next != NULL) {
 		tracking_node = tracking_node->next;
 	}
 	tracking_node->next = new_node;
@@ -53,25 +53,25 @@ int appendNode(linked_list_t *list, void *data) {
 	return 1;
 }
 
-int removeNode(linked_list_t *list, void *target, int (*cmp)(void *, void*)) {
+int removeNode(linked_list_t *list, void *target, int (*cmp)(void *, void *)) {
 	node_t *tracking_node;
 	node_t *previous_node;
 	int found;
 
 	/* return and found is boolean, cmp is comparison: 0 when true... */
 	found = 0;
-	if (list == NULL) {
+	if(list == NULL) {
 		return found;
 	}
-	if (target == NULL) {
+	if(target == NULL) {
 		return found;
 	}
 
 	/* cmp function should handle NULL case! */
-	if (list->head == NULL) {
+	if(list->head == NULL) {
 		return found;
 	}
-	if (cmp(list->head->data, target) == 0){
+	if(cmp(list->head->data, target) == 0) {
 		found = 1;
 		previous_node = list->head;
 		list->head = list->head->next;
@@ -81,8 +81,8 @@ int removeNode(linked_list_t *list, void *target, int (*cmp)(void *, void*)) {
 	}
 	tracking_node = list->head->next;
 	previous_node = list->head;
-	while (tracking_node != NULL) {
-		if (cmp(tracking_node->data, target)==0) {
+	while(tracking_node != NULL) {
+		if(cmp(tracking_node->data, target) == 0) {
 			found = 1;
 			previous_node->next = tracking_node->next;
 			free(tracking_node);
@@ -98,20 +98,21 @@ int removeNode(linked_list_t *list, void *target, int (*cmp)(void *, void*)) {
 }
 
 /* cmp function should handle NULL case! */
-node_t *findNode(linked_list_t *list, void *target, int(*cmp)(void *, void *)){
+node_t *findNode(linked_list_t *list, void *target,
+                 int (*cmp)(void *, void *)) {
 	node_t *tracking_node;
-	if (list == NULL) {
+	if(list == NULL) {
 		return NULL;
 	}
-	if (list->head == NULL){
+	if(list->head == NULL) {
 		return NULL;
 	}
-	if (target == NULL) {
+	if(target == NULL) {
 		return NULL;
 	}
 	tracking_node = list->head;
-	while (tracking_node != NULL) {
-		if (cmp(tracking_node->data, target)==0){
+	while(tracking_node != NULL) {
+		if(cmp(tracking_node->data, target) == 0) {
 			return tracking_node;
 		}
 		tracking_node = tracking_node->next;
@@ -123,10 +124,10 @@ int freeLinkedList(linked_list_t *list, void (*free_data)(void *)) {
 	node_t *tracking_node;
 	node_t *delete_node;
 
-	if (list == NULL) {
+	if(list == NULL) {
 		return 0;
 	}
-	if (list->head == NULL) {
+	if(list->head == NULL) {
 		free(list);
 		return 1;
 	}
@@ -135,7 +136,7 @@ int freeLinkedList(linked_list_t *list, void (*free_data)(void *)) {
 	while(tracking_node != NULL) {
 		delete_node = tracking_node;
 		tracking_node = tracking_node->next;
-		if (free_data != NULL){
+		if(free_data != NULL) {
 			free_data(delete_node->data);
 		}
 		free(delete_node);

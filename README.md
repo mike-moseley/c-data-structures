@@ -42,6 +42,8 @@ Tests live in `test/`. Each test file requires a corresponding block in `CMakeLi
 ## TODO
 
 - Add malloc failure testing via a wrapped `malloc` that can be toggled to return `NULL` in tests
+- Add a variadic convenience initializer for slices using `<stdarg.h>` to initialize with elements in one call
+- Consider switching return codes from boolean (0/1) to errno-style error codes across all data structures to differentiate error types (out of memory, invalid index, null pointer, etc.)
 
 - Refactor `findNode` and `removeNode` to use a shared internal helper that returns both the matching node and its previous node, eliminating duplicated traversal logic
 
