@@ -134,7 +134,9 @@ test_removeDNode (void)
 	TEST_ASSERT_EQUAL_INT (2, list->size);
 	TEST_ASSERT_EQUAL_INT (7, *(int *)list->head->data);
 	TEST_ASSERT_EQUAL_INT (3, *(int *)list->head->next->data);
-	/* TODO: add tail and prev assertions */
+	TEST_ASSERT_EQUAL_INT (3, *(int *)list->tail->data);
+	TEST_ASSERT_EQUAL_INT (7, *(int *)list->tail->prev->data);
+	TEST_ASSERT_EQUAL_INT (7, *(int *)list->tail->prev->prev->data);
 	freeDoublyLinkedList (list, NULL);
 }
 
@@ -158,7 +160,34 @@ test_removeDNodeHead (void)
 	TEST_ASSERT_EQUAL_INT (5, *(int *)list->head->data);
 	TEST_ASSERT_EQUAL_INT (3, *(int *)list->head->next->data);
 	TEST_ASSERT_TRUE (list->head->prev == NULL);
-	/* TODO: add tail assertions */
+	TEST_ASSERT_EQUAL_INT (3, *(int *)list->tail->data);
+	TEST_ASSERT_EQUAL_INT (5, *(int *)list->tail->prev->data);
+	freeDoublyLinkedList (list, NULL);
+}
+
+void
+test_removeDNodeTail (void)
+{
+	doubly_linked_list_t *list;
+	int int1;
+	int int2;
+	int int3;
+	int1 = 3;
+	int2 = 5;
+	int3 = 7;
+	list = createDoublyLinkedList ();
+	pushDNode (list, &int1);
+	pushDNode (list, &int2);
+	pushDNode (list, &int3);
+	TEST_ASSERT_EQUAL_INT (3, list->size);
+	removeDNode (list, &int1, cmp_int);
+	TEST_ASSERT_EQUAL_INT (2, list->size);
+	TEST_ASSERT_EQUAL_INT (7, *(int *)list->head->data);
+	TEST_ASSERT_EQUAL_INT (5, *(int *)list->head->next->data);
+	TEST_ASSERT_TRUE (list->head->prev == NULL);
+	TEST_ASSERT_EQUAL_INT (5, *(int *)list->tail->data);
+	TEST_ASSERT_EQUAL_INT (7, *(int *)list->tail->prev->data);
+	TEST_ASSERT_TRUE (list->head->next->next == NULL);
 	freeDoublyLinkedList (list, NULL);
 }
 
@@ -307,6 +336,7 @@ main (void)
 	RUN_TEST (test_appendDNodeNullList);
 	RUN_TEST (test_removeDNode);
 	RUN_TEST (test_removeDNodeHead);
+	RUN_TEST (test_removeDNodeTail);
 	RUN_TEST (test_removeDNodeNull);
 	RUN_TEST (test_removeDNodeDNE);
 	RUN_TEST (test_removeDNodeListNull);
