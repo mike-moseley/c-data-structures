@@ -9,7 +9,7 @@ typedef struct Node {
 } node_t;
 
 typedef struct LinkedList {
-	struct Node *head;
+	node_t *head;
 	size_t size;
 } linked_list_t;
 

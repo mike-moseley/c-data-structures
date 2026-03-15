@@ -20,7 +20,7 @@ enable_testing()
 set(UNITY_SRC "${CMAKE_SOURCE_DIR}/test/unity/unity.c")
 
 # Each test needs to be appended below
-add_custom_target(tests DEPENDS test_example test_linked_list)
+add_custom_target(tests DEPENDS test_example test_linked_list test_doubly_linked_list)
 
 # Begin test block; copy this block for each test file
 add_executable(test_example
@@ -36,6 +36,7 @@ target_include_directories(test_example PRIVATE
 	"${CMAKE_SOURCE_DIR}/test/unity"
 )
 target_compile_options(test_example PRIVATE -Wall -Wextra -g)
+
 add_executable(test_linked_list
 	test/test_linked_list.c
 	${UNITY_SRC}
@@ -50,6 +51,21 @@ target_include_directories(test_linked_list PRIVATE
 )
 target_compile_options(test_linked_list PRIVATE -Wall -Wextra -g)
 
+add_executable(test_doubly_linked_list
+	test/test_doubly_linked_list.c
+	${UNITY_SRC}
+)
+target_link_libraries(test_doubly_linked_list PRIVATE cds)
+set_target_properties(test_doubly_linked_list PROPERTIES
+	RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin/test"
+)
+target_include_directories(test_doubly_linked_list PRIVATE
+	"${CMAKE_SOURCE_DIR}/include"
+	"${CMAKE_SOURCE_DIR}/test/unity"
+)
+target_compile_options(test_doubly_linked_list PRIVATE -Wall -Wextra -g)
+
 add_test(NAME example COMMAND test_example)
 add_test(NAME linked_list COMMAND test_linked_list)
+add_test(NAME doubly_linked_list COMMAND test_doubly_linked_list)
 # End test block.

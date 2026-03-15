@@ -8,6 +8,7 @@ A C90 static library of common data structures, built with CMake and tested with
 - Doubly linked list *(planned)*
 - Circular linked list *(planned)*
 - Hashmap *(planned)*
+- Slice (dynamic array, inspired by Go slices) *(planned)*
 
 ## Build
 
