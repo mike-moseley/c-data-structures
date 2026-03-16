@@ -3,4 +3,12 @@
 
 #include <stddef.h>
 
+typedef enum {
+	CDS_OK = 0,
+	CDS_ERR_NULL = -1,
+	CDS_ERR_OOM = -2,
+	CDS_ERR_BOUNDS = -3,
+	CDS_ERR_INVALID = -4
+} cds_err_t;
+
 #endif

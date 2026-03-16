@@ -1,4 +1,5 @@
 #include "linked_list.h"
+#include "cds_types.h"
 #include <stdlib.h>
 
 linked_list_t *createLinkedList(void) {
@@ -12,28 +13,28 @@ linked_list_t *createLinkedList(void) {
 int pushNode(linked_list_t *list, void *data) {
 	node_t *new_node;
 	if(list == NULL) {
-		return 0;
+		return CDS_ERR_NULL;
 	}
 	new_node = malloc(sizeof(node_t));
 	if(new_node == NULL) {
-		return 0;
+		return CDS_ERR_OOM;
 	}
 	new_node->data = data;
 	new_node->next = list->head;
 	list->head = new_node;
 	list->size++;
-	return 1;
+	return CDS_OK;
 }
 
 int appendNode(linked_list_t *list, void *data) {
 	node_t *new_node;
 	node_t *tracking_node;
 	if(list == NULL) {
-		return 0;
+		return CDS_ERR_NULL;
 	}
 	new_node = malloc(sizeof(node_t));
 	if(new_node == NULL) {
-		return 0;
+		return CDS_ERR_OOM;
 	}
 	new_node->data = data;
 	new_node->next = NULL;
@@ -41,7 +42,7 @@ int appendNode(linked_list_t *list, void *data) {
 	if(list->head == NULL) {
 		list->head = new_node;
 		list->size++;
-		return 1;
+		return CDS_OK;
 	}
 
 	tracking_node = list->head;
@@ -50,51 +51,46 @@ int appendNode(linked_list_t *list, void *data) {
 	}
 	tracking_node->next = new_node;
 	list->size++;
-	return 1;
+	return CDS_OK;
 }
 
 int removeNode(linked_list_t *list, void *target, int (*cmp)(void *, void *)) {
 	node_t *tracking_node;
 	node_t *previous_node;
-	int found;
 
-	/* return and found is boolean, cmp is comparison: 0 when true... */
-	found = 0;
 	if(list == NULL) {
-		return found;
+		return CDS_ERR_NULL;
 	}
 	if(target == NULL) {
-		return found;
+		return CDS_ERR_NULL;
 	}
 
 	/* cmp function should handle NULL case! */
 	if(list->head == NULL) {
-		return found;
+		return CDS_ERR_NULL;
 	}
 	if(cmp(list->head->data, target) == 0) {
-		found = 1;
 		previous_node = list->head;
 		list->head = list->head->next;
 		free(previous_node);
 		list->size--;
-		return found;
+		return CDS_OK;
 	}
 	tracking_node = list->head->next;
 	previous_node = list->head;
 	while(tracking_node != NULL) {
 		if(cmp(tracking_node->data, target) == 0) {
-			found = 1;
 			previous_node->next = tracking_node->next;
 			free(tracking_node);
 			list->size--;
-			return found;
+			return CDS_OK;
 		} else {
 			previous_node = tracking_node;
 			tracking_node = tracking_node->next;
 		}
 	}
 
-	return found;
+	return CDS_ERR_INVALID;
 }
 
 /* cmp function should handle NULL case! */
@@ -125,11 +121,11 @@ int freeLinkedList(linked_list_t *list, void (*free_data)(void *)) {
 	node_t *delete_node;
 
 	if(list == NULL) {
-		return 0;
+		return CDS_ERR_NULL;
 	}
 	if(list->head == NULL) {
 		free(list);
-		return 1;
+		return CDS_OK;
 	}
 
 	tracking_node = list->head;
@@ -142,12 +138,5 @@ int freeLinkedList(linked_list_t *list, void (*free_data)(void *)) {
 		free(delete_node);
 	}
 	free(list);
-	return 1;
+	return CDS_OK;
 }
-
-/* int freeAllNodes(linked_list_t *list) { */
-/* 	node_t *delete_node; */
-/* 	while (list->head != NULL) { */
-/**/
-/* 	} */
-/* } */

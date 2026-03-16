@@ -1,4 +1,5 @@
 #include "slice.h"
+#include "cds_types.h"
 #include <stdlib.h>
 #include <string.h>
 
@@ -37,32 +38,32 @@ static int growSlice(slice_t *slice) {
 	if (new_cap == slice->cap) new_cap = slice->cap + 1; 
 	new_arr = realloc(slice->arr, new_cap * slice->element_size);
 	if(new_arr == NULL) {
-		return 0;
+		return CDS_ERR_OOM;
 	}
 	slice->cap = new_cap;
 	slice->arr = new_arr;
 
-	return 1;
+	return CDS_OK;
 }
 
 int appendSlice(slice_t *slice, void *data) {
 	int err;
 	if(slice == NULL) {
-		return 0;
+		return CDS_ERR_NULL;
 	}
 	if(data == NULL) {
-		return 0;
+		return CDS_ERR_NULL;
 	}
 	if(slice->len >= slice->cap) {
 		err = growSlice(slice);
-		if(err != 1) {
+		if(err != CDS_OK) {
 			return err;
 		}
 	}
 	memcpy((char *)slice->arr + (slice->len * slice->element_size), data,
 	       slice->element_size);
 	slice->len++;
-	return 1;
+	return CDS_OK;
 }
 
 slice_t *subSlice(slice_t *slice, size_t start_idx, size_t end_idx) {
@@ -105,12 +106,12 @@ int freeSlice(slice_t *slice, void (*free_data)(void *)) {
 	int i;
 	char *arr;
 	if (slice == NULL) {
-		return 0;
+		return CDS_ERR_NULL;
 	}
 	if (free_data == NULL) {
 		free(slice->arr);
 		free(slice);
-		return 1;
+		return CDS_OK;
 	} 
 	
 	arr = (char *)slice->arr;
@@ -119,38 +120,41 @@ int freeSlice(slice_t *slice, void (*free_data)(void *)) {
 	}
 	free(slice->arr);
 	free(slice);
-	return 1; 
+	return CDS_OK; 
 }
 int insertToSlice(slice_t *slice, void *data, size_t idx) {
 	char *arr_idx;
 	char *shifted_idx;
+	int err;
 	if (slice == NULL) {
-		return 0;
+		return CDS_ERR_NULL;
 	}
 	if (data == NULL) {
-		return 0;
+		return CDS_ERR_NULL;
 	}
 	if (idx > slice->len) {
-		return 0;
+		return CDS_ERR_INVALID;
 	}
 	if (slice->len >= slice->cap) {
-		if (growSlice(slice) != 1) return 0;
+		err = growSlice(slice);
+
+		if (err != CDS_OK) return err;
 	}
 	arr_idx = ((char *)slice->arr + idx * slice->element_size);
 	shifted_idx = (char *)slice->arr + (idx+1) * slice->element_size;
 	memmove(shifted_idx,arr_idx,(slice->len - idx)*slice->element_size);
 	memcpy(arr_idx, data, slice->element_size);
 	slice->len++;
-	return 1;
+	return CDS_OK;
 }
 int removeElement(slice_t *slice, size_t idx, void(*free_data)(void *)) { 
 	void *element_ptr;
 	void *move_ptr;
 	if (slice == NULL) {
-		return 0;
+		return CDS_ERR_NULL;
 	}
 	if (idx >= slice->len) {
-		return 0;
+		return CDS_ERR_INVALID;
 	}
 	element_ptr = (char *)slice->arr + idx * slice->element_size;
 	move_ptr = (char *)slice->arr + (idx+1)* slice->element_size;
@@ -160,7 +164,7 @@ int removeElement(slice_t *slice, size_t idx, void(*free_data)(void *)) {
 	memmove(element_ptr, move_ptr,(slice->len - idx - 1) * slice->element_size);
 	slice->len--;
 
-	return 1;
+	return CDS_OK;
 }
 void *getFromSlice(slice_t *slice, size_t idx) { 
 	if (slice == NULL) return NULL; 
