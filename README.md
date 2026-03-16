@@ -5,10 +5,10 @@ A C90 static library of common data structures, built with CMake and tested with
 ## Data Structures
 
 - Singly linked list
-- Doubly linked list *(planned)*
-- Circular linked list *(planned)*
+- Doubly linked list
+- Circular linked list *(paused)*
 - Hashmap *(planned)*
-- Slice (dynamic array, inspired by Go slices) *(planned)*
+- Slice (dynamic array, inspired by Go slices) *(in progress)*
 
 ## Build
 

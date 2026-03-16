@@ -136,7 +136,6 @@ test_removeDNode (void)
 	TEST_ASSERT_EQUAL_INT (3, *(int *)list->head->next->data);
 	TEST_ASSERT_EQUAL_INT (3, *(int *)list->tail->data);
 	TEST_ASSERT_EQUAL_INT (7, *(int *)list->tail->prev->data);
-	TEST_ASSERT_EQUAL_INT (7, *(int *)list->tail->prev->prev->data);
 	freeDoublyLinkedList (list, NULL);
 }
 
