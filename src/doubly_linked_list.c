@@ -10,7 +10,7 @@ doubly_linked_list_t *createDoublyLinkedList(void) {
 	list->size = 0;
 	return list;
 }
-int freeDoublyLinkedList(doubly_linked_list_t *list,
+cds_err_t freeDoublyLinkedList(doubly_linked_list_t *list,
                          void (*free_data)(void *)) {
 	dnode_t *tracking_node;
 	dnode_t *delete_node;
@@ -35,7 +35,7 @@ int freeDoublyLinkedList(doubly_linked_list_t *list,
 	free(list);
 	return CDS_OK;
 }
-int pushDNode(doubly_linked_list_t *list, void *data) {
+cds_err_t pushDNode(doubly_linked_list_t *list, void *data) {
 	dnode_t *new_node;
 	if(list == NULL) {
 		return CDS_ERR_NULL;
@@ -57,7 +57,7 @@ int pushDNode(doubly_linked_list_t *list, void *data) {
 	list->size++;
 	return CDS_OK;
 }
-int appendDNode(doubly_linked_list_t *list, void *data) {
+cds_err_t appendDNode(doubly_linked_list_t *list, void *data) {
 	dnode_t *new_node;
 	if(list == NULL) {
 		return CDS_ERR_NULL;
@@ -80,7 +80,7 @@ int appendDNode(doubly_linked_list_t *list, void *data) {
 
 	return CDS_OK;
 }
-int removeDNode(doubly_linked_list_t *list, void *target,
+cds_err_t removeDNode(doubly_linked_list_t *list, void *target,
                 int (*cmp)(void *, void *)) {
 	dnode_t *tracking_node;
 	dnode_t *previous_node;

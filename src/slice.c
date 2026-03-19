@@ -30,7 +30,7 @@ slice_t *createSlice(size_t element_size, size_t initial_len) {
 	return slice;
 }
 
-static int growSlice(slice_t *slice) {
+static cds_err_t growSlice(slice_t *slice) {
 	size_t new_cap;
 	void *new_arr;
 
@@ -46,7 +46,7 @@ static int growSlice(slice_t *slice) {
 	return CDS_OK;
 }
 
-int appendSlice(slice_t *slice, void *data) {
+cds_err_t appendSlice(slice_t *slice, void *data) {
 	int err;
 	if(slice == NULL) {
 		return CDS_ERR_NULL;
@@ -102,7 +102,7 @@ slice_t *subSlice(slice_t *slice, size_t start_idx, size_t end_idx) {
 	return new_slice;
 }
 
-int freeSlice(slice_t *slice, void (*free_data)(void *)) {
+cds_err_t freeSlice(slice_t *slice, void (*free_data)(void *)) {
 	int i;
 	char *arr;
 	if (slice == NULL) {
@@ -122,7 +122,7 @@ int freeSlice(slice_t *slice, void (*free_data)(void *)) {
 	free(slice);
 	return CDS_OK; 
 }
-int insertToSlice(slice_t *slice, void *data, size_t idx) {
+cds_err_t insertToSlice(slice_t *slice, void *data, size_t idx) {
 	char *arr_idx;
 	char *shifted_idx;
 	int err;
@@ -147,7 +147,7 @@ int insertToSlice(slice_t *slice, void *data, size_t idx) {
 	slice->len++;
 	return CDS_OK;
 }
-int removeElement(slice_t *slice, size_t idx, void(*free_data)(void *)) { 
+cds_err_t removeElement(slice_t *slice, size_t idx, void(*free_data)(void *)) { 
 	void *element_ptr;
 	void *move_ptr;
 	if (slice == NULL) {

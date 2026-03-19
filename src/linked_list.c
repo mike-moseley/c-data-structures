@@ -10,7 +10,7 @@ linked_list_t *createLinkedList(void) {
 	return list;
 }
 
-int pushNode(linked_list_t *list, void *data) {
+cds_err_t pushNode(linked_list_t *list, void *data) {
 	node_t *new_node;
 	if(list == NULL) {
 		return CDS_ERR_NULL;
@@ -26,7 +26,7 @@ int pushNode(linked_list_t *list, void *data) {
 	return CDS_OK;
 }
 
-int appendNode(linked_list_t *list, void *data) {
+cds_err_t appendNode(linked_list_t *list, void *data) {
 	node_t *new_node;
 	node_t *tracking_node;
 	if(list == NULL) {
@@ -54,7 +54,7 @@ int appendNode(linked_list_t *list, void *data) {
 	return CDS_OK;
 }
 
-int removeNode(linked_list_t *list, void *target, int (*cmp)(void *, void *)) {
+cds_err_t removeNode(linked_list_t *list, void *target, int (*cmp)(void *, void *)) {
 	node_t *tracking_node;
 	node_t *previous_node;
 
@@ -116,7 +116,7 @@ node_t *findNode(linked_list_t *list, void *target,
 
 	return NULL;
 }
-int freeLinkedList(linked_list_t *list, void (*free_data)(void *)) {
+cds_err_t freeLinkedList(linked_list_t *list, void (*free_data)(void *)) {
 	node_t *tracking_node;
 	node_t *delete_node;
 
