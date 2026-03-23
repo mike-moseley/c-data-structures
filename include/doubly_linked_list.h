@@ -16,10 +16,10 @@ typedef struct DoublyLinkedList {
 } doubly_linked_list_t;
 
 doubly_linked_list_t *createDoublyLinkedList(void);
-int freeDoublyLinkedList(doubly_linked_list_t* list, void(*free_data)(void *));
-int pushDNode(doubly_linked_list_t *list, void *data);
-int appendDNode(doubly_linked_list_t *list, void *data);
-int removeDNode(doubly_linked_list_t *list, void *target, int (*cmp)(void *, void *));
+cds_err_t freeDoublyLinkedList(doubly_linked_list_t* list, void(*free_data)(void *));
+cds_err_t pushDNode(doubly_linked_list_t *list, void *data);
+cds_err_t appendDNode(doubly_linked_list_t *list, void *data);
+cds_err_t removeDNode(doubly_linked_list_t *list, void *target, int (*cmp)(void *, void *));
 dnode_t *findDNode(doubly_linked_list_t *list, void *target, int (*cmp)(void *, void *));
 
 #endif

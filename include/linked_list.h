@@ -14,10 +14,10 @@ typedef struct LinkedList {
 } linked_list_t;
 
 linked_list_t *createLinkedList(void);
-int freeLinkedList(linked_list_t* list, void(*free_data)(void *));
-int pushNode(linked_list_t *list, void *data);
-int appendNode(linked_list_t *list, void *data);
-int removeNode(linked_list_t *list, void *target, int (*cmp)(void *, void *));
+cds_err_t freeLinkedList(linked_list_t* list, void(*free_data)(void *));
+cds_err_t pushNode(linked_list_t *list, void *data);
+cds_err_t appendNode(linked_list_t *list, void *data);
+cds_err_t removeNode(linked_list_t *list, void *target, int (*cmp)(void *, void *));
 node_t *findNode(linked_list_t *list, void *target, int (*cmp)(void *, void *));
 
 #endif
