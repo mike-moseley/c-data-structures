@@ -39,6 +39,39 @@ static size_t hash_function(hashmap_t *hashmap, void *key) {
 	return hash % hashmap->cap;
 }
 
+static cds_err_t resizeHashMap(hashmap_t *hashmap) {
+	hnode_t **new_buckets;
+	hnode_t *bucket;
+	hnode_t *next_bucket;
+	size_t old_cap;
+	size_t new_hash;
+	size_t i;
+
+	old_cap = hashmap->cap;
+	new_buckets = calloc(hashmap->cap * 2, sizeof(hnode_t *));
+	if(new_buckets == NULL) {
+		return CDS_ERR_OOM;
+	}
+	hashmap->cap *= 2;
+
+	for(i = 0; i < old_cap; i++) {
+		bucket = hashmap->buckets[i];
+		if(bucket == NULL) {
+			continue;
+		}
+		while(bucket != NULL) {
+			new_hash = hash_function(hashmap, bucket->key);
+			next_bucket = bucket->next;
+			bucket->next = new_buckets[new_hash];
+			new_buckets[new_hash] = bucket;
+			bucket = next_bucket;
+		}
+	}
+	free(hashmap->buckets);
+	hashmap->buckets = new_buckets;
+	return CDS_OK;
+}
+
 hashmap_t *createHashMap(size_t key_size, size_t value_size,
                          size_t initial_cap) {
 	hashmap_t *hashmap;
@@ -65,27 +98,27 @@ hashmap_t *createHashMap(size_t key_size, size_t value_size,
 	return hashmap;
 }
 
-void freeHashMap(hashmap_t *hashmap, void(*free_data)(void *)){
+void freeHashMap(hashmap_t *hashmap, void (*free_data)(void *)) {
 	size_t i;
 	hnode_t *bucket;
 	hnode_t *next_bucket;
 	hnode_t *old_bucket;
-	if (hashmap == NULL) {
+	if(hashmap == NULL) {
 		return;
 	}
-	for (i=0; i<hashmap->cap; i++){
+	for(i = 0; i < hashmap->cap; i++) {
 		if(hashmap->buckets[i] == NULL) {
 			continue;
 		}
 
 		bucket = hashmap->buckets[i];
 		next_bucket = bucket->next;
-		while(bucket!=NULL) {
+		while(bucket != NULL) {
 			free(bucket->key);
 			free_data(bucket->value);
 			old_bucket = bucket;
 			bucket = next_bucket;
-			if (bucket != NULL) {
+			if(bucket != NULL) {
 				next_bucket = bucket->next;
 			}
 			free(old_bucket);
@@ -94,6 +127,7 @@ void freeHashMap(hashmap_t *hashmap, void(*free_data)(void *)){
 	free(hashmap->buckets);
 	free(hashmap);
 }
+
 cds_err_t insertToHashMap(hashmap_t *hashmap, void *key, void *value) {
 	size_t hash;
 	int found;
@@ -164,12 +198,15 @@ cds_err_t insertToHashMap(hashmap_t *hashmap, void *key, void *value) {
 			}
 		}
 	}
-		return CDS_OK;
+	if (hashmap->len * 10 > hashmap->len * 7) {
+		resizeHashMap(hashmap);
+	}
+	return CDS_OK;
 }
 void *getFromHashMap(hashmap_t *hashmap, void *key) {
 	size_t hash;
 	hnode_t *bucket;
-	
+
 	if(hashmap == NULL) {
 		return NULL;
 	}
@@ -180,8 +217,8 @@ void *getFromHashMap(hashmap_t *hashmap, void *key) {
 	hash = hash_function(hashmap, key);
 	bucket = hashmap->buckets[hash];
 
-	while(bucket!=NULL) {
-		if (keycmp(hashmap, bucket->key, key)) {
+	while(bucket != NULL) {
+		if(keycmp(hashmap, bucket->key, key)) {
 			return bucket->value;
 		} else {
 			bucket = bucket->next;
@@ -205,8 +242,8 @@ cds_err_t removeFromHashMap(hashmap_t *hashmap, void *key) {
 	bucket = hashmap->buckets[hash];
 	prev_bucket = NULL;
 
-	while(bucket!=NULL) {
-		if (keycmp(hashmap, bucket->key, key)) {
+	while(bucket != NULL) {
+		if(keycmp(hashmap, bucket->key, key)) {
 			free(bucket->key);
 			free(bucket->value);
 			if(prev_bucket != NULL) {
