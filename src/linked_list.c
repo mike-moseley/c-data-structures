@@ -90,7 +90,7 @@ cds_err_t removeNode(linked_list_t *list, void *target, int (*cmp)(void *, void 
 		}
 	}
 
-	return CDS_ERR_INVALID;
+	return CDS_ERR_NOT_FOUND;
 }
 
 /* cmp function should handle NULL case! */

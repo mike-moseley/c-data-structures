@@ -65,7 +65,9 @@ hashmap_t *createHashMap(size_t key_size, size_t value_size,
 	return hashmap;
 }
 
-/* void freeHashMap(hashmap_t *hashmap, void(*free_data)(void *)); */
+void freeHashMap(hashmap_t *hashmap, void(*free_data)(void *)){
+
+}
 cds_err_t insertToHashMap(hashmap_t *hashmap, void *key, void *value) {
 	size_t hash;
 	int found;
@@ -160,4 +162,39 @@ void *getFromHashMap(hashmap_t *hashmap, void *key) {
 		}
 	}
 	return NULL;
+}
+cds_err_t removeFromHashMap(hashmap_t *hashmap, void *key) {
+	size_t hash;
+	hnode_t *bucket;
+	hnode_t *prev_bucket;
+
+	if(hashmap == NULL) {
+		return CDS_ERR_NULL;
+	}
+	if(key == NULL) {
+		return CDS_ERR_NULL;
+	}
+
+	hash = hash_function(hashmap, key);
+	bucket = hashmap->buckets[hash];
+	prev_bucket = NULL;
+
+	while(bucket!=NULL) {
+		if (keycmp(hashmap, bucket->key, key)) {
+			free(bucket->key);
+			free(bucket->value);
+			if(prev_bucket != NULL) {
+				prev_bucket->next = bucket->next;
+			} else {
+				hashmap->buckets[hash] = bucket->next;
+			}
+			free(bucket);
+			hashmap->len--;
+			return CDS_OK;
+		} else {
+			prev_bucket = bucket;
+			bucket = bucket->next;
+		}
+	}
+	return CDS_ERR_NOT_FOUND;
 }

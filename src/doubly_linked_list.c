@@ -128,7 +128,7 @@ cds_err_t removeDNode(doubly_linked_list_t *list, void *target,
 		}
 	}
 
-	return CDS_ERR_INVALID;
+	return CDS_ERR_NOT_FOUND;
 }
 dnode_t *findDNode(doubly_linked_list_t *list, void *target,
                    int (*cmp)(void *, void *)) {
