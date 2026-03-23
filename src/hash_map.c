@@ -15,15 +15,15 @@ static int keycmp(hashmap_t *hashmap, void *bucket_key, void *key) {
 }
 
 /* FNV-1a hash */
-static size_t hash_function(void *key, size_t key_size) {
+static size_t hash_function(hashmap_t *hashmap, void *key) {
 	size_t hash;
+	size_t i;
 	unsigned char *bytes;
 	/* key is not a string */
-	if(key_size > 0) {
-		size_t i;
+	if(hashmap->key_size > 0) {
 		hash = 2166136261u;
 		bytes = (unsigned char *)key;
-		for(i = 0; i < key_size; i++) {
+		for(i = 0; i < hashmap->key_size; i++) {
 			hash ^= *(bytes + i);
 			hash *= 16777619u;
 		}
@@ -36,7 +36,7 @@ static size_t hash_function(void *key, size_t key_size) {
 			bytes++;
 		}
 	}
-	return hash;
+	return hash % hashmap->cap;
 }
 
 hashmap_t *createHashMap(size_t key_size, size_t value_size,
@@ -85,7 +85,7 @@ cds_err_t insertToHashMap(hashmap_t *hashmap, void *key, void *value) {
 	}
 
 	found = 0;
-	hash = hash_function(key, hashmap->key_size) % hashmap->cap;
+	hash = hash_function(hashmap, key);
 	hash_node = malloc(sizeof(hnode_t));
 	if(hash_node == NULL) {
 		return CDS_ERR_OOM;
@@ -138,5 +138,26 @@ cds_err_t insertToHashMap(hashmap_t *hashmap, void *key, void *value) {
 	}
 		return CDS_OK;
 }
-/* void *getFromHashMap(hashmap_t *hashmap, void *key); */
-/* cds_err_t removeFromHashMap(hashmap_t *hashmap, void *key); */
+void *getFromHashMap(hashmap_t *hashmap, void *key) {
+	size_t hash;
+	hnode_t *bucket;
+	
+	if(hashmap == NULL) {
+		return NULL;
+	}
+	if(key == NULL) {
+		return NULL;
+	}
+
+	hash = hash_function(hashmap, key);
+	bucket = hashmap->buckets[hash];
+
+	while(bucket!=NULL) {
+		if (keycmp(hashmap, bucket->key, key)) {
+			return bucket->value;
+		} else {
+			bucket = bucket->next;
+		}
+	}
+	return NULL;
+}
