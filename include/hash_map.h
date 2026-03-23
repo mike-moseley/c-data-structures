@@ -14,9 +14,10 @@ typedef struct HashMap {
 	size_t len;
 	size_t cap;
 	size_t key_size;
+	size_t value_size;
 } hashmap_t;
 
-hashmap_t *createHashMap(size_t key_size, size_t initial_cap);
+hashmap_t *createHashMap(size_t key_size, size_t value_size,size_t initial_cap);
 void freeHashMap(hashmap_t *hashmap, void(*free_data)(void *));
 cds_err_t insertToHashMap(hashmap_t *hashmap, void *key, void*value);
 void *getFromHashMap(hashmap_t *hashmap, void *key);
