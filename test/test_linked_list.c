@@ -1,3 +1,4 @@
+#include "cds_types.h"
 #include "unity.h"
 #include "linked_list.h"
 #include <stdlib.h>
@@ -47,14 +48,14 @@ void test_pushNode(void) {
 void test_pushNodeNullData(void) {
 	linked_list_t *list;
 	list = createLinkedList();
-	TEST_ASSERT_EQUAL_INT(1, pushNode(list, NULL));
+	TEST_ASSERT_EQUAL_INT(CDS_OK, pushNode(list, NULL));
 	free(list->head);
 	free(list);
 }
 void test_pushNodeNullList(void) {
 	linked_list_t *list;
 	list = NULL;
-	TEST_ASSERT_EQUAL_INT(0, pushNode(list, NULL));
+	TEST_ASSERT_EQUAL_INT(CDS_ERR_NULL, pushNode(list, NULL));
 }
 
 void test_appendNode(void) {
@@ -77,13 +78,13 @@ void test_appendNode(void) {
 void test_appendNodeNullData(void) {
 	linked_list_t *list;
 	list = createLinkedList();
-	TEST_ASSERT_EQUAL_INT(1, appendNode(list, NULL));
+	TEST_ASSERT_EQUAL_INT(CDS_OK, appendNode(list, NULL));
 	freeLinkedList(list, NULL);
 }
 void test_appendNodeNullList(void) {
 	linked_list_t *list;
 	list = NULL;
-	TEST_ASSERT_EQUAL_INT(0, appendNode(list, NULL));
+	TEST_ASSERT_EQUAL_INT(CDS_ERR_NULL, appendNode(list, NULL));
 }
 void test_removeNode(void){
 	linked_list_t *list;
@@ -138,7 +139,7 @@ void test_removeNodeNull(void) {
 	pushNode(list, &int3);
 	TEST_ASSERT_EQUAL_INT(3, list->size);
 	error = removeNode(list, NULL, cmp_int);
-	TEST_ASSERT_EQUAL_INT(0, error);
+	TEST_ASSERT_EQUAL_INT(CDS_ERR_NULL, error);
 	TEST_ASSERT_EQUAL_INT(3, list->size);
 	freeLinkedList(list, NULL);
 }
@@ -156,7 +157,7 @@ void test_removeNodeDNE(void) {
 	pushNode(list, &int2);
 	TEST_ASSERT_EQUAL_INT(2, list->size);
 	error = removeNode(list, &int3, cmp_int);
-	TEST_ASSERT_EQUAL_INT(0, error);
+	TEST_ASSERT_EQUAL_INT(CDS_ERR_NOT_FOUND, error);
 	TEST_ASSERT_EQUAL_INT(2, list->size);
 	freeLinkedList(list, NULL);
 }
@@ -167,7 +168,7 @@ void test_removeNodeListNull(void) {
 	list = NULL;
 	int1 = 0;
 	error = removeNode(list, &int1, cmp_int);
-	TEST_ASSERT_EQUAL_INT(0, error);
+	TEST_ASSERT_EQUAL_INT(CDS_ERR_NULL, error);
 }
 void test_removeNodeListSingle(void) {
 	linked_list_t *list;
@@ -178,7 +179,7 @@ void test_removeNodeListSingle(void) {
 	pushNode(list, &int1);
 	TEST_ASSERT_EQUAL_INT(1, list->size);
 	error = removeNode(list, &int1, cmp_int);
-	TEST_ASSERT_EQUAL_INT(1, error);
+	TEST_ASSERT_EQUAL_INT(CDS_OK, error);
 	TEST_ASSERT_EQUAL_INT(0, list->size);
 	freeLinkedList(list, NULL);
 }

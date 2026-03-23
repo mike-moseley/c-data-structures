@@ -20,7 +20,7 @@ enable_testing()
 set(UNITY_SRC "${CMAKE_SOURCE_DIR}/test/unity/unity.c")
 
 # Each test needs to be appended below
-add_custom_target(tests DEPENDS test_example test_linked_list test_doubly_linked_list test_slice)
+add_custom_target(tests DEPENDS test_example test_linked_list test_doubly_linked_list test_slice test_hash_map)
 
 # Begin test block; copy this block for each test file
 add_executable(test_example
@@ -79,8 +79,23 @@ target_include_directories(test_slice PRIVATE
 )
 target_compile_options(test_slice PRIVATE -Wall -Wextra -g)
 
+add_executable(test_hash_map
+	test/test_hash_map.c
+	${UNITY_SRC}
+)
+target_link_libraries(test_hash_map PRIVATE cds)
+set_target_properties(test_hash_map PROPERTIES
+	RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin/test"
+)
+target_include_directories(test_hash_map PRIVATE
+	"${CMAKE_SOURCE_DIR}/include"
+	"${CMAKE_SOURCE_DIR}/test/unity"
+)
+target_compile_options(test_hash_map PRIVATE -Wall -Wextra -g)
+
 add_test(NAME example COMMAND test_example)
 add_test(NAME linked_list COMMAND test_linked_list)
 add_test(NAME doubly_linked_list COMMAND test_doubly_linked_list)
 add_test(NAME slice COMMAND test_slice)
+add_test(NAME hash_map COMMAND test_hash_map)
 # End test block.

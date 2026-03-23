@@ -1,3 +1,4 @@
+#include "cds_types.h"
 #include "doubly_linked_list.h"
 #include "unity.h"
 #include <stdlib.h>
@@ -64,7 +65,7 @@ test_pushDNodeNullData (void)
 {
 	doubly_linked_list_t *list;
 	list = createDoublyLinkedList ();
-	TEST_ASSERT_EQUAL_INT (1, pushDNode (list, NULL));
+	TEST_ASSERT_EQUAL_INT (CDS_OK, pushDNode (list, NULL));
 	freeDoublyLinkedList (list, NULL);
 }
 
@@ -73,7 +74,7 @@ test_pushDNodeNullList (void)
 {
 	doubly_linked_list_t *list;
 	list = NULL;
-	TEST_ASSERT_EQUAL_INT (0, pushDNode (list, NULL));
+	TEST_ASSERT_EQUAL_INT (CDS_ERR_NULL, pushDNode (list, NULL));
 }
 
 void
@@ -103,7 +104,7 @@ test_appendDNodeNullData (void)
 {
 	doubly_linked_list_t *list;
 	list = createDoublyLinkedList ();
-	TEST_ASSERT_EQUAL_INT (1, appendDNode (list, NULL));
+	TEST_ASSERT_EQUAL_INT (CDS_OK, appendDNode (list, NULL));
 	freeDoublyLinkedList (list, NULL);
 }
 
@@ -112,7 +113,7 @@ test_appendDNodeNullList (void)
 {
 	doubly_linked_list_t *list;
 	list = NULL;
-	TEST_ASSERT_EQUAL_INT (0, appendDNode (list, NULL));
+	TEST_ASSERT_EQUAL_INT (CDS_ERR_NULL, appendDNode (list, NULL));
 }
 
 void
@@ -207,7 +208,7 @@ test_removeDNodeNull (void)
 	pushDNode (list, &int3);
 	TEST_ASSERT_EQUAL_INT (3, list->size);
 	error = removeDNode (list, NULL, cmp_int);
-	TEST_ASSERT_EQUAL_INT (0, error);
+	TEST_ASSERT_EQUAL_INT (CDS_ERR_NULL, error);
 	TEST_ASSERT_EQUAL_INT (3, list->size);
 	freeDoublyLinkedList (list, NULL);
 }
@@ -228,7 +229,7 @@ test_removeDNodeDNE (void)
 	pushDNode (list, &int2);
 	TEST_ASSERT_EQUAL_INT (2, list->size);
 	error = removeDNode (list, &int3, cmp_int);
-	TEST_ASSERT_EQUAL_INT (0, error);
+	TEST_ASSERT_EQUAL_INT (CDS_ERR_NOT_FOUND, error);
 	TEST_ASSERT_EQUAL_INT (2, list->size);
 	freeDoublyLinkedList (list, NULL);
 }
@@ -242,7 +243,7 @@ test_removeDNodeListNull (void)
 	list = NULL;
 	int1 = 0;
 	error = removeDNode (list, &int1, cmp_int);
-	TEST_ASSERT_EQUAL_INT (0, error);
+	TEST_ASSERT_EQUAL_INT (CDS_ERR_NULL, error);
 }
 
 void
@@ -256,7 +257,7 @@ test_removeDNodeSingle (void)
 	pushDNode (list, &int1);
 	TEST_ASSERT_EQUAL_INT (1, list->size);
 	error = removeDNode (list, &int1, cmp_int);
-	TEST_ASSERT_EQUAL_INT (1, error);
+	TEST_ASSERT_EQUAL_INT (CDS_OK, error);
 	TEST_ASSERT_EQUAL_INT (0, list->size);
 	TEST_ASSERT_TRUE (list->head == NULL);
 	TEST_ASSERT_TRUE (list->tail == NULL);
