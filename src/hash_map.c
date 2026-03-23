@@ -66,7 +66,33 @@ hashmap_t *createHashMap(size_t key_size, size_t value_size,
 }
 
 void freeHashMap(hashmap_t *hashmap, void(*free_data)(void *)){
+	size_t i;
+	hnode_t *bucket;
+	hnode_t *next_bucket;
+	hnode_t *old_bucket;
+	if (hashmap == NULL) {
+		return;
+	}
+	for (i=0; i<hashmap->cap; i++){
+		if(hashmap->buckets[i] == NULL) {
+			continue;
+		}
 
+		bucket = hashmap->buckets[i];
+		next_bucket = bucket->next;
+		while(bucket!=NULL) {
+			free(bucket->key);
+			free_data(bucket->value);
+			old_bucket = bucket;
+			bucket = next_bucket;
+			if (bucket != NULL) {
+				next_bucket = bucket->next;
+			}
+			free(old_bucket);
+		}
+	}
+	free(hashmap->buckets);
+	free(hashmap);
 }
 cds_err_t insertToHashMap(hashmap_t *hashmap, void *key, void *value) {
 	size_t hash;
