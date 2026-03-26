@@ -54,3 +54,17 @@ void *popRingBuffer(ringbuffer_t *ringbuffer) {
 
 	return data;
 }
+
+void *peekRingBuffer(ringbuffer_t *ringbuffer) {
+	void *data;
+
+	if(ringbuffer == NULL) return NULL;
+	if(ringbuffer->len==0) return NULL;
+
+	data = malloc(ringbuffer->element_size);
+	if(data == NULL) return NULL;
+
+	memcpy(data, (char *)ringbuffer->buf + ringbuffer->head * ringbuffer->element_size, ringbuffer->element_size);
+
+	return data;
+}
