@@ -98,13 +98,13 @@ hashmap_t *createHashMap(size_t key_size, size_t value_size,
 	return hashmap;
 }
 
-void freeHashMap(hashmap_t *hashmap, void (*free_data)(void *)) {
+cds_err_t freeHashMap(hashmap_t *hashmap, void (*free_data)(void *)) {
 	size_t i;
 	hnode_t *bucket;
 	hnode_t *next_bucket;
 	hnode_t *old_bucket;
 	if(hashmap == NULL) {
-		return;
+		return CDS_ERR_NULL;
 	}
 	for(i = 0; i < hashmap->cap; i++) {
 		if(hashmap->buckets[i] == NULL) {
@@ -126,6 +126,7 @@ void freeHashMap(hashmap_t *hashmap, void (*free_data)(void *)) {
 	}
 	free(hashmap->buckets);
 	free(hashmap);
+	return CDS_OK;
 }
 
 cds_err_t insertToHashMap(hashmap_t *hashmap, void *key, void *value) {
