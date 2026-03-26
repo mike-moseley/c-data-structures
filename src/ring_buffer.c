@@ -28,6 +28,13 @@ ringbuffer_t *createRingBuffer(size_t initial_cap, size_t element_size) {
 	return ringbuffer;
 }
 
+cds_err_t freeRingBuffer(ringbuffer_t *ringbuffer) {
+	if(ringbuffer == NULL) return CDS_ERR_NULL;
+	free(ringbuffer->buf);
+	free(ringbuffer);
+	return CDS_OK;
+}
+
 cds_err_t pushRingBuffer(ringbuffer_t *ringbuffer, void *data) {
 	if(ringbuffer == NULL) return CDS_ERR_NULL;
 	if(ringbuffer->len == ringbuffer->cap) {
