@@ -1,5 +1,7 @@
 #include "ring_buffer.h"
+#include "cds_types.h"
 #include <stdlib.h>
+#include <string.h>
 
 ringbuffer_t *createRingBuffer(size_t initial_cap, size_t element_size) {
 	ringbuffer_t *ringbuffer;
@@ -24,4 +26,15 @@ ringbuffer_t *createRingBuffer(size_t initial_cap, size_t element_size) {
 	ringbuffer->element_size = element_size;
 
 	return ringbuffer;
+}
+
+cds_err_t pushRingBuffer(ringbuffer_t *ringbuffer, void *data) {
+	if(ringbuffer == NULL) return CDS_ERR_NULL;
+	if(ringbuffer->len == ringbuffer->cap) {
+		ringbuffer->head = (ringbuffer->head + 1) % ringbuffer->cap;
+	};
+	memcpy((char *)ringbuffer->buf + ringbuffer->tail * ringbuffer->element_size, data, ringbuffer->element_size);
+	ringbuffer->tail = (ringbuffer->tail + 1) % ringbuffer->cap;
+	if(ringbuffer->len < ringbuffer->cap) ringbuffer->len++;
+	return CDS_OK;
 }
