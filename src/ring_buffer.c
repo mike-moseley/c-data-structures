@@ -38,3 +38,19 @@ cds_err_t pushRingBuffer(ringbuffer_t *ringbuffer, void *data) {
 	if(ringbuffer->len < ringbuffer->cap) ringbuffer->len++;
 	return CDS_OK;
 }
+
+void *popRingBuffer(ringbuffer_t *ringbuffer) {
+	void *data;
+
+	if(ringbuffer == NULL) return NULL;
+	if(ringbuffer->len==0) return NULL;
+
+	data = malloc(ringbuffer->element_size);
+	if(data == NULL) return NULL;
+
+	memcpy(data, (char *)ringbuffer->buf + ringbuffer->head * ringbuffer->element_size, ringbuffer->element_size);
+	ringbuffer->head = (ringbuffer->head + 1) % ringbuffer->cap;
+	ringbuffer->len--;
+
+	return data;
+}
