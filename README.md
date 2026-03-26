@@ -6,9 +6,10 @@ A C90 static library of common data structures, built with CMake and tested with
 
 - Singly linked list
 - Doubly linked list
-- Circular linked list *(paused)*
-- Hashmap *(planned)*
-- Slice (dynamic array, inspired by Go slices) *(in progress)*
+- Slice (dynamic array, inspired by Go slices)
+- Hash map (separate chaining, built-in FNV-1a hash)
+- Ring buffer (fixed-capacity, overwrites oldest on full)
+- Circular linked list *(skipped)*
 
 ## Build
 
@@ -43,8 +44,7 @@ Tests live in `test/`. Each test file requires a corresponding block in `CMakeLi
 
 - Add malloc failure testing via a wrapped `malloc` that can be toggled to return `NULL` in tests
 - Add a variadic convenience initializer for slices using `<stdarg.h>` to initialize with elements in one call
-- Consider switching return codes from boolean (0/1) to errno-style error codes across all data structures to differentiate error types (out of memory, invalid index, null pointer, etc.)
-
+- Write tests for hash map, ring buffer, and slice (insert, remove, get, subSlice)
 - Refactor `findNode` and `removeNode` to use a shared internal helper that returns both the matching node and its previous node, eliminating duplicated traversal logic
 
 ## Project Structure
