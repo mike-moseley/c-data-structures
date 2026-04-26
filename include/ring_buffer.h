@@ -17,5 +17,6 @@ cds_err_t freeRingBuffer(ringbuffer_t *ringbuffer);
 cds_err_t pushRingBuffer(ringbuffer_t *ringbuffer,void *element);
 void *popRingBuffer(ringbuffer_t *ringbuffer);
 void *peekRingBuffer(ringbuffer_t *ringbuffer);
+void *getFromRingBuffer(ringbuffer_t *ringbuffer, size_t idx);
 
 #endif

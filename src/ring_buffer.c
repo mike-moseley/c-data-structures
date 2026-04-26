@@ -75,3 +75,12 @@ void *peekRingBuffer(ringbuffer_t *ringbuffer) {
 
 	return data;
 }
+
+void *getFromRingBuffer(ringbuffer_t *ringbuffer, size_t idx) {
+	size_t offset;
+	if (ringbuffer == NULL) return NULL;
+	if(ringbuffer->len==0) return NULL;
+
+	offset = (ringbuffer->head + idx) % ringbuffer->cap;
+	return (char *)ringbuffer->buf + offset * ringbuffer->element_size;
+}
