@@ -162,7 +162,11 @@ cds_err_t insertToHashMap(hashmap_t *hashmap, void *key, void *value) {
 		free(hash_node);
 		return CDS_ERR_OOM;
 	}
-	node_value = malloc(hashmap->value_size);
+	if(hashmap->key_size == 0) {
+		node_value = malloc(strlen(value) + 1);
+	} else {
+		node_value = malloc(hashmap->value_size);
+	}
 	if(node_value == NULL) {
 		free(node_key);
 		free(hash_node);
